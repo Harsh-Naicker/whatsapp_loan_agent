@@ -69,7 +69,7 @@ The system is built with the following components:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/whatsapp_loan_agent.git
+   git clone https://github.com/Harsh-Naicker/whatsapp_loan_agent.git
    cd whatsapp_loan_agent
    ```
 
