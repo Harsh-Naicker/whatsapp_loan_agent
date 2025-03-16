@@ -57,7 +57,7 @@ The system is built with the following components:
    - Customizes messaging based on previous conversation context
 
 ## Project Demo
-[Watch the demo](whatsapp_loan_agent_demo.mov)
+[Watch the demo](whatsapp_loan_agent_demo.mp4)
 
 ## Project Setup
 
