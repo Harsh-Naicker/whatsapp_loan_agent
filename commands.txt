@@ -1,0 +1,19 @@
+python manage.py makemigrations
+python manage.py migrate
+
+python manage.py loaddata initial_data.json
+
+python manage.py runserver
+
+celery -A whatsapp_loan_agent worker -l info
+
+celery -A whatsapp_loan_agent beat -l info
+
+Testing with the Simulator:
+
+Open the simulator in your browser: http://localhost:8000/simulator/
+Use the interface to simulate customer messages
+Test different languages and response types
+Use example messages or create your own
+Test audio messages using the microphone button
+

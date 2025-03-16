@@ -1,0 +1,456 @@
+<!-- templates/simulator/index.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp AI Agent Simulator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .chat-container {
+            max-width: 500px;
+            margin: 30px auto;
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #e5ddd5;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23aaaaaa' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        .chat-header {
+            background-color: #128C7E;
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .chat-header h5 {
+            margin: 0;
+        }
+        .chat-messages {
+            height: 500px;
+            overflow-y: auto;
+            padding: 15px;
+        }
+        .message {
+            max-width: 80%;
+            margin-bottom: 10px;
+            padding: 10px 15px;
+            border-radius: 15px;
+            position: relative;
+            clear: both;
+            word-wrap: break-word;
+        }
+        .user-message {
+            background-color: #DCF8C6;
+            float: right;
+            border-bottom-right-radius: 0;
+        }
+        .agent-message {
+            background-color: white;
+            float: left;
+            border-bottom-left-radius: 0;
+        }
+        .chat-input {
+            padding: 15px;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            border-top: 1px solid #ddd;
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 30px;
+            margin-right: 10px;
+        }
+        .chat-input button {
+            background-color: #128C7E;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .audio-recording {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 15px;
+            background-color: #f8f8f8;
+            border-radius: 30px;
+        }
+        .audio-recording .record-status {
+            color: #E91E63;
+            font-weight: bold;
+        }
+        .settings-panel {
+            background-color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .timestamp {
+            font-size: 0.7em;
+            color: #777;
+            margin-top: 5px;
+            text-align: right;
+        }
+        .message-loading {
+            display: inline-block;
+            width: 50px;
+            text-align: center;
+        }
+        .message-loading:after {
+            content: '.';
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+        @keyframes dots {
+            0%, 20% { color: rgba(0,0,0,0); text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0); }
+            40% { color: #777; text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0); }
+            60% { text-shadow: .25em 0 0 #777, .5em 0 0 rgba(0,0,0,0); }
+            80%, 100% { text-shadow: .25em 0 0 #777, .5em 0 0 #777; }
+        }
+        .media-message {
+            display: flex;
+            align-items: center;
+        }
+        .media-message svg {
+            margin-right: 8px;
+        }
+        .template-message {
+            background-color: #E1F5FE;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="settings-panel">
+                    <h4>Settings</h4>
+                    <div class="mb-3">
+                        <label for="phoneNumber" class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" id="phoneNumber" value="911234567890">
+                    </div>
+                    <div class="mb-3">
+                        <label for="language" class="form-label">Preferred Language</label>
+                        <select class="form-select" id="language">
+                            <option value="english">English</option>
+                            <option value="hindi">Hindi</option>
+                            <option value="kannada">Kannada</option>
+                            <option value="tamil">Tamil</option>
+                            <option value="telugu">Telugu</option>
+                        </select>
+                    </div>
+                    <div class="d-grid">
+                        <button class="btn btn-danger" id="resetBtn">Reset Conversation</button>
+                    </div>
+                </div>
+                <div class="settings-panel">
+                    <h4>Example Messages</h4>
+                    <div class="mb-2">
+                        <button class="btn btn-sm btn-outline-primary example-message">Hi, I need a loan against my property</button>
+                    </div>
+                    <div class="mb-2">
+                        <button class="btn btn-sm btn-outline-primary example-message">I have a house in Bangalore worth 1.5 crore</button>
+                    </div>
+                    <div class="mb-2">
+                        <button class="btn btn-sm btn-outline-primary example-message">I need about 80 lakhs for my business expansion</button>
+                    </div>
+                    <div class="mb-2">
+                        <button class="btn btn-sm btn-outline-primary example-message">What would be the interest rate?</button>
+                    </div>
+                    <div class="mb-2">
+                        <button class="btn btn-sm btn-outline-primary example-message">I'm not interested right now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="chat-container">
+                    <div class="chat-header">
+                        <div>
+                            <h5>WhatsApp AI Agent</h5>
+                            <small>Loan Against Property</small>
+                        </div>
+                        <div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+                        </div>
+                    </div>
+                    <div class="chat-messages" id="chatMessages">
+                        <!-- Messages will appear here -->
+                    </div>
+                    <div class="chat-input">
+                        <div id="audioRecording" class="audio-recording">
+                            <span class="record-status">Recording...</span>
+                            <button id="stopRecordingBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-square"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>
+                            </button>
+                        </div>
+                        <input type="text" id="messageInput" placeholder="Type a message" autocomplete="off">
+                        <button id="sendBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-send"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                        </button>
+                        <button id="recordBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mic"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let mediaRecorder;
+        let audioChunks = [];
+        let lastTimestamp = 0;
+        let pollingInterval;
+        
+        // DOM elements
+        const chatMessages = document.getElementById('chatMessages');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const recordBtn = document.getElementById('recordBtn');
+        const stopRecordingBtn = document.getElementById('stopRecordingBtn');
+        const audioRecording = document.getElementById('audioRecording');
+        const phoneNumberInput = document.getElementById('phoneNumber');
+        const languageSelect = document.getElementById('language');
+        const resetBtn = document.getElementById('resetBtn');
+        
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            sendBtn.addEventListener('click', sendMessage);
+            messageInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            recordBtn.addEventListener('click', startRecording);
+            stopRecordingBtn.addEventListener('click', stopRecording);
+            resetBtn.addEventListener('click', resetConversation);
+            
+            // Example messages
+            document.querySelectorAll('.example-message').forEach(button => {
+                button.addEventListener('click', function() {
+                    messageInput.value = this.textContent;
+                    sendMessage();
+                });
+            });
+            
+            // Start polling for messages
+            startPolling();
+        });
+        
+        // Functions
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+            
+            const phone = phoneNumberInput.value.trim();
+            
+            // Add message to chat
+            addMessage(message, 'user-message');
+            
+            // Clear input
+            messageInput.value = '';
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            // Send to backend
+            fetch('/simulator/api/send/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    phone: phone,
+                    message: message,
+                    type: 'text'
+                }),
+            });
+        }
+        
+        function startRecording() {
+            // Request permission to use microphone
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    audioChunks = [];
+                    mediaRecorder = new MediaRecorder(stream);
+                    
+                    mediaRecorder.addEventListener('dataavailable', event => {
+                        audioChunks.push(event.data);
+                    });
+                    
+                    mediaRecorder.addEventListener('stop', () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/ogg' });
+                        uploadAudio(audioBlob);
+                    });
+                    
+                    // Show recording UI
+                    audioRecording.style.display = 'flex';
+                    messageInput.style.display = 'none';
+                    sendBtn.style.display = 'none';
+                    recordBtn.style.display = 'none';
+                    
+                    mediaRecorder.start();
+                })
+                .catch(error => {
+                    console.error('Error accessing microphone:', error);
+                    alert('Could not access microphone. Please make sure you have granted permission.');
+                });
+        }
+        
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                
+                // Hide recording UI
+                audioRecording.style.display = 'none';
+                messageInput.style.display = 'block';
+                sendBtn.style.display = 'flex';
+                recordBtn.style.display = 'flex';
+                
+                // Add message to chat
+                addMessage('🎤 Audio message', 'user-message');
+                
+                // Show typing indicator
+                showTypingIndicator();
+            }
+        }
+        
+        function uploadAudio(audioBlob) {
+            const phone = phoneNumberInput.value.trim();
+            const formData = new FormData();
+            
+            formData.append('audio', audioBlob, 'recording.ogg');
+            formData.append('phone', phone);
+            
+            fetch('/simulator/api/upload_audio/', {
+                method: 'POST',
+                body: formData
+            });
+        }
+        
+        function addMessage(text, className, timestamp = new Date().toLocaleTimeString()) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${className}`;
+            
+            // Check if this is a media message
+            if (text.startsWith('🎤') || text.startsWith('[AUDIO]')) {
+                messageDiv.classList.add('media-message');
+                messageDiv.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-headphones"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>
+                    <span>${text}</span>
+                `;
+            } else if (text.startsWith('[TEMPLATE:')) {
+                // Template message
+                messageDiv.classList.add('template-message');
+                messageDiv.textContent = text;
+            } else {
+                // Regular text message
+                messageDiv.textContent = text;
+            }
+            
+            // Add timestamp
+            const timestampDiv = document.createElement('div');
+            timestampDiv.className = 'timestamp';
+            timestampDiv.textContent = timestamp;
+            messageDiv.appendChild(timestampDiv);
+            
+            chatMessages.appendChild(messageDiv);
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        function showTypingIndicator() {
+            const indicatorDiv = document.createElement('div');
+            indicatorDiv.className = 'message agent-message typing-indicator';
+            indicatorDiv.innerHTML = '<span class="message-loading"></span>';
+            
+            chatMessages.appendChild(indicatorDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        function removeTypingIndicator() {
+            const indicator = document.querySelector('.typing-indicator');
+            if (indicator) {
+                indicator.remove();
+            }
+        }
+        
+        function startPolling() {
+            // Poll for new messages every second
+            pollingInterval = setInterval(() => {
+                const phone = phoneNumberInput.value.trim();
+                
+                fetch(`/simulator/api/responses/?phone=${phone}&since=${lastTimestamp}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.length > 0) {
+                            // Remove typing indicator
+                            removeTypingIndicator();
+                            
+                            // Add new messages
+                            data.forEach(msg => {
+                                let content = msg.content;
+                                
+                                // Format template messages
+                                if (msg.type === 'template') {
+                                    content = `[TEMPLATE: ${msg.template_name}] ${JSON.stringify(msg.params)}`;
+                                }
+                                
+                                addMessage(content, 'agent-message', new Date(msg.timestamp * 1000).toLocaleTimeString());
+                                lastTimestamp = Math.max(lastTimestamp, msg.timestamp);
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error polling for messages:', error);
+                    });
+            }, 1000);
+        }
+        
+        function resetConversation() {
+            if (confirm('Are you sure you want to reset the conversation? This will clear all message history.')) {
+                fetch('/simulator/api/reset/', {
+                    method: 'POST'
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            // Clear chat
+                            chatMessages.innerHTML = '';
+                            lastTimestamp = 0;
+                            
+                            // Add system message
+                            addMessage('Conversation has been reset.', 'agent-message');
+                        } else {
+                            alert('Failed to reset conversation: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error resetting conversation:', error);
+                        alert('An error occurred while resetting the conversation.');
+                    });
+            }
+        }
+    </script>
+</body>
+</html>

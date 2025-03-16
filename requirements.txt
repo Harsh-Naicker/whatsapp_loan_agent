@@ -1,0 +1,67 @@
+# Django and extensions
+Django==4.2.7
+django-extensions==3.2.3
+django-cors-headers==4.3.0
+django-filter==23.3
+djangorestframework==3.14.0
+
+# Database
+psycopg2-binary==2.9.9
+dj-database-url==2.1.0
+
+# Environment and configuration
+python-dotenv==1.0.0
+pyyaml==6.0.1
+
+# Async and background tasks
+celery==5.3.4
+django-celery-beat==2.5.0
+django-celery-results==2.5.1
+redis==5.0.1
+kombu==5.3.2
+amqp==5.1.1
+
+# HTTP and APIs
+requests==2.31.0
+aiohttp==3.8.6
+backoff==2.2.1
+httpx==0.25.1
+
+# WhatsApp / Meta API
+# meta-api-client would be listed here if using an official client
+
+# AI and NLP
+openai==1.3.3
+transformers==4.35.2
+torch==2.1.0
+numpy==1.26.1
+pandas==2.1.1
+nltk==3.8.1
+
+# Audio processing
+soundfile==0.12.1
+whisper==1.1.10
+torchaudio==2.1.0
+pydub==0.25.1
+
+# Utility
+python-dateutil==2.8.2
+pytz==2023.3.post1
+tqdm==4.66.1
+tenacity==8.2.3
+
+# Development and testing
+pytest==7.4.3
+pytest-django==4.7.0
+pytest-cov==4.1.0
+black==23.10.1
+isort==5.12.0
+flake8==6.1.0
+
+# Production
+gunicorn==21.2.0
+whitenoise==6.6.0
+uvicorn==0.23.2
+
+# Logging
+python-json-logger==2.0.7
